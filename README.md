@@ -1,1 +1,26 @@
-# Fake-News-Classification
+# Data Description
+
+The dataset used for developing the deep learning application is the Fake and real news dataset from Kaggle. It comprises two categories of news, fake and real, organized into two separate CSV files. The "Fake.csv" file includes 23,481 entries, while the "True.csv" file consists of 21,417 entries, both having four columns: "title," "text," "subject," and "date."
+
+# Data Cleaning and Preprocessing:
+
+To facilitate model development and data analysis, a new column named "class" was introduced in both dataframes, fake_news and real_news. Subsequently, the two initial dataframes were merged into a single dataframe called "news," resulting in 44,898 entries and 5 columns. Columns that were not useful for analysis ("title," "subject," "date") were removed, retaining only the "text" and "class" columns. During data cleaning, 209 duplicate entries were identified and removed from the dataframe. Additionally, no null values were found.
+
+Following data analysis in Google Colab, the distribution was found to be balanced, with 23,478 entries representing fake news and 21,211 representing real news. The analysis also revealed subjects associated with fake news, including "News," "politics," "left-news," "Government News," "US_News," and "Middle-east." For real news, the associated subjects were "worldnews" and "politicsNews." The ten most frequent words for fake and real news were also analyzed. Predominant words in fake news included "trump," "said," "people," "president," "would," "one," "clinton," "obama," "like," and "donald." In contrast, high-frequency words in real news were "said," "trump," "would," "reuters," "president," "state," "government," "new," "house," and "states."
+
+To improve model performance, various text preprocessing steps were applied, such as removing text containing "(Reuters)" and the preceding text (present only in some entries for real news). Special characters and non-significant words (stopwords) were removed, text was converted to lowercase for consistency, and lemmatization was applied to standardize terms and reduce vocabulary size. Additionally, links were removed from text since some entries originated from Twitter.
+
+
+# Model Construction:
+
+To address the issue of identifying fake news, the LSTM (Long Short-Term Memory) neural network architecture was chosen. This choice is justified by the deeper contextual understanding exhibited by LSTM networks, which is particularly useful for detecting false news by examining the entire content for possible manipulation. The architecture's superior performance in processing sequential data, where news can be seen as words or character strings, further supported this choice. Another crucial aspect is the LSTM's ability to retain important information, allowing the identification of subtle patterns in large texts.
+
+Before building the model, important data preparation steps were undertaken. Text tokenization was performed, breaking the text into words and assigning a unique index to each word. These indices are essential for representing words in numeric form and facilitating the neural network's learning process. The Tokenizer class from the TensorFlow library was used for this step. The next step involved calculating the vocabulary size, i.e., the total number of unique words, for use in the embedding layer. Additionally, ensuring all sequences had the same length was achieved using TensorFlow's pad_sequences function, with a maximum length set at 1000 characters.
+
+For model definition, an embedding layer was included to project words into a 30-dimensional vector space. A LSTM layer with 100 units, capable of capturing temporal relationships in sequential data, was added. The model was completed with a dense layer providing final results, having a single unit and using sigmoid activation to align with the binary classification problem. The model was compiled, specifying the optimization algorithm ('adam'), loss function ('binary_crossentropy'), and metrics ('acc') for accuracy.
+
+# Results:
+
+To evaluate the model's performance, the dataset was split into two sets: a training set (70% of entries) and a testing set (30% of entries). The model was trained on the training data for 6 epochs to enhance overall performance. Training results showed a positive evolution of the model over the 6 epochs. In the first epoch, the model achieved an accuracy of 94.65% on the training set and 98.04% on the testing set. This upward trend continued, reaching an accuracy of 99.94% on the training set and 98.41% on the testing set in the final epoch. The loss, measuring the difference between model predictions and reality, consistently decreased, indicating a good fit of the model to the data. These results suggest that the model efficiently learned from the training data and generalized well to new data, demonstrating high performance in detecting fake news.
+
+The model's good performance is evident in the confusion matrix as well. For 6,791 entries, the model made correct predictions, classifying them as fake news, while 168 entries were misclassified as real. Additionally, 45 cases occurred where real news was incorrectly classified as fake, and 6,403 entries were correctly classified as real news.
